@@ -49,63 +49,6 @@ app.get('/api/animals', function (req, res) {
 });
 
 
-
-app.get('/api/books/:id', function (req, res) {
-  // find one book by its id
-  db.Book.findById(req.params.id)
-    // populate the author
-    .populate('author')
-    .exec(function(err, book){
-      if (err) {
-        res.status(500).send(err);
-        return;
-      }
-      res.json(book);
-    });
-
-});
-
-
-
-app.post('/api/books', function (req, res) {
-  // create new book with form data (`req.body`)
-  var newBook = new db.Book({
-    title: req.body.title,
-    image: req.body.image,
-    releaseDate: req.body.releaseDate,
-  });
-  // find the author from req.body
-  db.Author.findOne({name: req.body.author}, function(err, author){
-    if (err) {
-      return console.log(err);
-    }
-    // add this author to the book
-    newBook.author = author;
-    // save newBook to database
-    newBook.save(function(err, book){
-      if (err) {
-        return console.log("save error: " + err);
-      }
-      console.log("saved ", book.title);
-      // send back the book!
-      res.json(book);
-    });
-  });
-
-});
-
-
-// delete book
-app.delete('/api/books/:id', function (req, res) {
-  // get book id from url params (`req.params`)
-  console.log(req.params)
-  var bookId = req.params.id;
-
-  db.Book.findOneAndRemove({ _id: bookId }, function (err, deletedBook) {
-    res.json(deletedBook);
-  });
-});
-
 app.listen(process.env.PORT || 3000, function () {
   console.log('Example app listening at http://localhost:3000/');
 });
