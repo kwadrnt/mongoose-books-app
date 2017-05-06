@@ -1,10 +1,7 @@
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/book-app");
+mongoose.connect("mongodb://localhost/endangered-animals");
 
 // Use native JavaScript promises to avoid warning
 mongoose.Promise = global.Promise;
 
-module.exports.Book = require("./book.js");
-module.exports.Author = require("./author.js");
-
-
+module.exports.Animal = require("./animal.js");

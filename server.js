@@ -15,22 +15,35 @@ app.use(express.static('public'));
 // body parser config to accept our datatypes
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// custom middleware to console.log some helpful information
+//   in terminal every time we get a request
+function logRequestInfo(req, res, next){
+  console.log(`\nRECEIVED REQUEST : ${req.method} ${req.url}`);
+  console.log('query params:', req.query);
+  console.log('body:', req.body);
+  // request url parameters haven't been decided yet
+  //  so we'll have to log them inside any routes where
+  //  we want to use them
+  next();
+}
+app.use(logRequestInfo);
+
 // define a root route: localhost:3000/
 app.get('/', function (req, res) {
   res.sendFile('views/index.html' , { root : __dirname});
 });
 
 // get all books
-app.get('/api/books', function (req, res) {
+app.get('/api/animals', function (req, res) {
   // find one book by its id
-  db.Book.find({})
-    .populate('author')
-    .exec(function(err, books){
+  db.Animal.find({})
+    .populate('animal')
+    .exec(function(err, animals){
       if (err) {
         res.status(500).send(err);
         return;
       }
-      res.json(books);
+      res.json(animals);
     });
 
 });
